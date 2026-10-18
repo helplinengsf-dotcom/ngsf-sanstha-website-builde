@@ -91,7 +91,7 @@ async function showDashboard(){
  dash.scrollIntoView({behavior:'smooth',block:'start'});
  await renderDashboard();
 }
-async function fetchRows(table,fields='*'){const {data,error}=await supabaseClient.from(table).select(fields).eq('organization_id',activeOrganization.id).order('created_at',{ascending:false});if(error)throw error;return data||[];}
+async function fetchRows(table,fields='*'){const {data,error}=await supabaseClient.from(table).select(fields).eq('organization_id',activeOrganization.id);if(error)throw error;return data||[];}
 function card(title,description,button,view){return '<article class="dashcard"><div class="dashicon">✦</div><h3>'+safe(title)+'</h3><p>'+safe(description)+'</p><button class="btn primary" data-view="'+view+'">'+safe(button)+' →</button></article>';}
 async function renderDashboard(){
  if(!activeOrganization)return;
@@ -123,3 +123,5 @@ async function renderDashboard(){
 }
 document.getElementById('dashNav').addEventListener('click',e=>{const b=e.target.closest('button[data-view]');if(!b)return;activeView=b.dataset.view;renderDashboard();});
 document.getElementById('signOut').addEventListener('click',async()=>{await supabaseClient.auth.signOut();activeOrganization=null;dash.hidden=true;document.querySelectorAll('main > section').forEach(s=>s.hidden=false);document.querySelector('.cta')?.removeAttribute('hidden');openAuth();});
+
+if(supabaseClient){supabaseClient.auth.getSession().then(({data})=>{if(data?.session)showDashboard();});supabaseClient.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'&&session)setTimeout(()=>showDashboard(),0);});}
