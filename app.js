@@ -44,7 +44,8 @@ otpSend.addEventListener('click',async()=>{
  if(!sms&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)){authMessage.textContent='Enter a valid email address.';return;}
  otpSend.disabled=true;authMessage.textContent='Sending OTP…';
  try{
-  const result=await supabaseClient.auth.signInWithOtp(sms?{phone:value,options:{channel:'sms'}}:{email:value,options:{shouldCreateUser:true}});
+  const redirectTo = new URL('./', window.location.href).href;
+  const result=await supabaseClient.auth.signInWithOtp(sms?{phone:value,options:{channel:'sms'}}:{email:value,options:{shouldCreateUser:true,emailRedirectTo:redirectTo}});
   if(result.error)throw result.error;
   pendingIdentity=value;pendingMethod=sms?'sms':'email';
   otpArea.hidden=false;otpVerify.hidden=false;otpSend.hidden=true;
