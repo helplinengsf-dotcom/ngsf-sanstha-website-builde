@@ -21,6 +21,7 @@ function openSetup(type){if(type)form.elements.type.value=type;msg.className='su
 function openAuth(){authMessage.className='sub';authMessage.textContent='Enter your email or mobile number to receive a one-time code.';otpArea.hidden=true;otpVerify.hidden=true;otpSend.hidden=false;if(dialog.open)dialog.close();if(!authDialog.open)authDialog.showModal()}
 document.querySelectorAll('.open').forEach(b=>b.addEventListener('click',()=>openSetup()));
 document.getElementById('login').addEventListener('click',openAuth);
+document.getElementById('loginFromSetup').addEventListener('click',openAuth);
 document.querySelectorAll('.choose').forEach(b=>b.addEventListener('click',()=>openSetup(b.dataset.type)));
 document.getElementById('close').addEventListener('click',()=>dialog.close());
 document.getElementById('authClose').addEventListener('click',()=>authDialog.close());
